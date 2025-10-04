@@ -29,10 +29,6 @@ RUN bash -c "source $NVM_DIR/nvm.sh && nvm install $NODE_VERSION && npm i -g ts-
 RUN apt-get install -y nanopb
 RUN apt-get install -y python3-protobuf
 
-COPY messages.proto /workspace/messages.proto
-COPY buf.gen.yaml /workspace/buf.gen.yaml
-COPY buf.yaml /workspace/buf.yaml
-COPY egate_messages.proto /workspace/egate_messages.proto
 COPY gen.sh /workspace/gen.sh
 
 WORKDIR /workspace
