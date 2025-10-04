@@ -1,0 +1,72 @@
+syntax = "proto3";
+
+package egate;
+
+option go_package = "enda/pkg/egate-proto/egate";
+
+message PairReadyRequest {
+  bytes pair_token = 1;
+  string mac_address = 2;
+}
+
+message UsbScanRequest {}
+
+message UsbBindRequest {
+  string usb_bid = 1;
+}
+
+message UsbUnbindRequest {
+  string usb_bid = 1;
+}
+
+message EthernetScanRequest {}
+
+message NebulaConfigRequest {
+  bytes nebula_blob = 1;
+}
+
+message EthernetBindRequest {
+  string ip_from = 1;
+  string ip_to = 2;
+}
+
+message EthernetUnbindRequest {
+  string ip_from = 1;
+  string ip_to = 2;
+}
+
+message NebulaConfigResponse {}
+
+message UsbBindResponse {}
+message UsbUnbindResponse {}
+
+message USBDevice {
+  string bus_id = 1;
+  string vendor_id = 2;
+  string product_id = 3;
+}
+
+message UsbScanResponse {
+  repeated USBDevice usb_devices = 1;
+}
+
+message EthernetBindResponse {}
+
+message EthernetUnbindResponse {}
+
+message EthernetDevice {
+  string ip = 1;
+  string mac = 2;
+  string brand = 3;
+}
+
+message EthernetScanResponse {
+  repeated EthernetDevice eth_devices = 1;
+}
+
+// message GatewayToServer {
+//   uint32 transaction_id = 1;
+//   oneof payload {
+//     PairReadyRequest pair_ready = 2;
+//   }
+// }

@@ -1,0 +1,235 @@
+// protolint: skip_file
+syntax = "proto3";
+
+import "egate_messages.proto";
+
+option go_package = "enda/pkg/egate-proto";
+
+message PairReadyRequest {
+  uint32 challenge_code = 1;
+}
+
+message PairRequest {
+  uint32 challenge_code = 2;
+  bytes token = 3;
+  string email = 4;
+}
+
+message SlaveInfo {
+  uint32 id = 2;
+  uint32 register_num = 3;
+  uint32 function_code = 4;
+  uint32 data = 5;
+}
+
+message CommandRequest {
+  repeated SlaveInfo slave = 1;
+}
+
+enum FunctionCode {
+  None = 0;
+  Coil = 1;
+  Discrete = 2;
+  Holding = 3;
+  Input = 4;
+}
+
+enum RegisterType {
+  Type_None = 0;
+  Read_Coil = 1;
+  Read_Discrete = 2;
+  Read_Holding = 3;
+  Read_Input = 4;
+  Write_Single_Coil = 5;
+  Write_Single_Holding = 6;
+  Write_Multiple_Coils = 15;
+  Write_Multiple_Holdings = 16;
+  Read_Multiple_Holdings = 17;
+  Read_Multiple_Coils = 18;
+  Read_Multiple_Inputs = 19;
+  Read_Multiple_Discretes = 20;
+}
+
+message TrackRequest {
+  message SlaveTrackPage {
+    uint32 slave_id = 1;
+    string model = 2;
+    string label = 3;
+    message Range {
+      uint32 offset = 1;
+      uint32 length = 2;
+      FunctionCode code = 3;
+    }
+    repeated Range ranges = 4;
+  }
+  uint32 trackId = 1;
+  repeated SlaveTrackPage slaves = 2;
+}
+
+enum AutoDiscoveryCommand {
+  Start = 0;
+  Stop = 1;
+}
+
+message AutoDiscoveryRequest {
+  AutoDiscoveryCommand command = 1;
+}
+
+message IntervalRequest {
+  uint32 time = 1;
+}
+
+message SlaveRange {
+  uint32 offset = 1;
+  uint32 length = 2;
+  RegisterType type = 3;
+  repeated int32 data = 4;
+}
+
+message PageWriteRequest {
+  repeated uint32 slave_id = 1;
+  repeated SlaveRange ranges = 2;
+}
+
+message Request {
+  uint32 transaction_id = 1;
+  bytes token = 2;
+  oneof payload {
+    PairRequest pair = 4;
+    AutoDiscoveryRequest discovery = 5;
+    TrackRequest track = 6;
+    CommandRequest command = 7;
+    ReadRequest read = 8;
+    TrackReadRequest track_read = 9;
+    TrackRequest track_page_read = 10;
+    IntervalRequest interval = 11;
+    PageWriteRequest page_write = 12;
+    ReadMultipleParam read_multiple = 13;
+    WriteMultipleParam write_multiple = 14;
+
+    egate.UsbScanRequest usb_scan = 21;
+    egate.UsbBindRequest usb_bind = 22;
+    egate.UsbUnbindRequest usb_unbind = 23;
+    egate.EthernetScanRequest ethernet_scan = 24;
+    egate.EthernetBindRequest ethernet_bind = 25;
+    egate.EthernetUnbindRequest ethernet_unbind = 26;
+    egate.NebulaConfigRequest nebula_config = 27;
+  }
+}
+
+message ReadMultipleParam {
+  uint32 slave_id = 1;
+  uint32 startAddress = 2;
+  uint32 length = 3;
+  RegisterType register_type = 4;
+}
+
+message WriteMultipleParam {
+  uint32 slave_id = 1;
+  uint32 startAddress = 2;
+  RegisterType register_type = 3;
+  repeated int32 data = 4;
+}
+
+message EmptyResponse {}
+
+message TrackReadRequest {}
+
+message ReadRequest {
+  uint32 slave_id = 1;
+  uint32 register_offset = 2;
+  RegisterType register_type = 3;
+}
+
+message ReadResponse {
+  int32 data = 1;
+}
+
+message MultipleReadResponse {
+  repeated int32 data = 1;
+}
+
+message Response {
+  uint32 transaction_id = 1;
+  uint32 status = 2;
+  oneof payload {
+    EmptyResponse empty = 3;
+    ReadResponse read = 4;
+    TrackedSlavesData track_read = 5;
+    MultipleReadResponse read_multiple = 6;
+
+    egate.UsbScanResponse usb_scan = 20;
+    egate.UsbBindResponse usb_bind = 21;
+    egate.UsbUnbindResponse usb_unbind = 22;
+    egate.EthernetScanResponse ethernet_scan = 23;
+    egate.EthernetBindResponse ethernet_bind = 24;
+    egate.EthernetUnbindResponse ethernet_unbind = 25;
+    egate.NebulaConfigResponse nebula_config = 26;
+  }
+}
+
+message AutoDiscoverySlave {
+  uint32 address = 1;
+  string model = 2;
+}
+
+message AutoDiscoveryStatus {
+  uint32 progress = 1;
+  repeated AutoDiscoverySlave slaves = 2;
+}
+
+message TrackedSlavesData {
+  uint32 trackId = 1;
+  uint64 timestamp = 3;
+  message DataStream {
+    repeated int32 data = 1;
+  }
+  DataStream data_stream = 4;
+}
+
+message ServerResponse {
+  uint32 transaction_id = 1;
+  uint32 status = 2;
+}
+
+enum LogLevel {
+  Debug = 0;
+  Info = 1;
+  Warning = 2;
+  Error = 3;
+}
+
+message Log {
+  LogLevel level = 1;
+  string message = 2;
+}
+
+message GatewayToServer {
+  uint32 transaction_id = 1;
+  oneof payload {
+    PairReadyRequest pair_ready = 2;
+    AutoDiscoveryStatus auto_scan = 3;
+    TrackedSlavesData tracked_device = 4;
+    Log log = 5;
+    egate.PairReadyRequest egate_pair_ready = 10;
+  }
+}
+
+message DeviceCapabilities {
+  /* device tracking period in minutes */
+  uint32 tracking_period = 1;
+
+  /* maximum number of slaves that can be tracked */
+  uint32 track_request_devices_max = 2;
+
+  /* maximum ranges for a single tracked slave */
+  uint32 track_request_ranges_max = 3;
+
+  /* multiple register read/write support */
+  bool multiple_register_rw = 4;
+  /* maximum number of registers that can be read/written in a single request (of the same type) */
+  uint32 multiple_register_rw_max = 5;
+
+  /* slave cloning support */
+  bool cloning = 6;
+}

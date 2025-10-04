@@ -1,0 +1,24 @@
+PairRequest.token         max_size:32     fixed_length:true
+PairRequest.email         max_length:64
+
+Request.token             max_size:32     fixed_length:true    
+
+TrackRequest.slaves                 max_count:25
+TrackRequest.SlaveTrackPage.model   max_length:16
+TrackRequest.SlaveTrackPage.label   max_length:32
+TrackRequest.SlaveTrackPage.ranges  max_count:10
+
+AutoDiscoverySlave.model   max_length:16
+
+AutoDiscoveryStatus.slaves max_count:5
+
+CommandRequest.slave max_count:100
+
+TrackedSlavesData.DataStream.data max_count:500
+
+PageWriteRequest.slave_id            max_count:25
+PageWriteRequest.ranges              max_count:10
+SlaveRange.data                      max_count:127
+
+Log.message max_length:255
+

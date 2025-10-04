@@ -1,0 +1,40 @@
+# .github/workflows/build-assets.yml
+
+name: 'Generate Assets'
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    
+    # This is the key part! Tell GitHub Actions to run all steps in this container.
+    container:
+      image: ghcr.io/${{ github.repository }}:latest
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+
+    steps:
+      # 1. The runner first pulls your Docker image.
+      # 2. It starts the container.
+      # 3. It checks out your repository code INTO the running container.
+      - name: 'Checkout repository'
+        uses: actions/checkout@v4
+
+      # 4. Now, run your asset generation command.
+      # This command executes INSIDE your container, using the tools you defined in your Dockerfile.
+      - name: 'Install dependencies and build assets'
+        run: |
+          npm ci
+          npm run build
+        # Or whatever your build command is, e.g., `yarn build`, `webpack`, `hugo`, etc.
+
+      # 5. Finally, upload the generated assets so you can use them in another job or download them.
+      - name: 'Upload build artifacts'
+        uses: actions/upload-artifact@v4
+        with:
+          name: production-assets # The name of the artifact bundle
+          path: ./dist # The path to the folder containing your generated assets

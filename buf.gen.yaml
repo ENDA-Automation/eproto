@@ -1,0 +1,21 @@
+version: v2
+clean: true
+inputs:
+  - proto_file: messages.proto
+    include_package_files: false
+plugins:
+  - local: protoc-gen-go
+    out: gen/go/pkg/egate-proto
+    opt: 
+      - paths=import
+      - module=enda/pkg/egate-proto
+    include_imports: true
+
+  - local: protoc-gen-nanopb
+    out: gen/nanopb
+    opt: field_name_type=camel,omit_message_names,omit_enum_names,omit_enum_prefixes
+    include_imports: false
+
+  - local: protoc-gen-ts_proto
+    out: gen/ts
+    opt: esModuleInterop=true,oneof=unions
