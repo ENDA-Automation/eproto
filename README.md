@@ -12,6 +12,7 @@ git submodule add https://github.com/enda-automation/eproto.git libs/eproto
 
 ```console
 git submodule update --init --recursive
+docker run --rm -v $(pwd):/workspace -w /workspace ghcr.io/enda-automation/eproto:latest
 ```
 
 ## Install buf
