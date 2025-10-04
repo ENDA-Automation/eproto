@@ -31,4 +31,4 @@ jobs:
         with:
           context: . # Use the root of the repo as the build context
           push: true # Actually push the image
-          tags: ghcr.io/${{ github.repository }}:latest | tr '[:upper:]' '[:lower:]'
+          tags: ghcr.io/enda-automation/eproto:latest'
