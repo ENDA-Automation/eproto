@@ -1,50 +1,41 @@
 # eproto
 
-`buf` tool is used to generate code.
+This repo serves as the single point of truth for Protocol Buffers definitions and code generation for enda services.
 
-`buf.gen.yaml` controls generation. Local tools are preferred with respect to remote plugins because you can hit rate limits for remote plugins.
+Intended usage for now is:
+
+- Add this repo as a git submodule to your project
+- Use the provided Docker image to generate code
+- Consume the generated code for your desired language
 
 ## Usage
+
+Add this repo as a submodule:
 
 ```console
 git submodule add https://github.com/enda-automation/eproto.git libs/eproto
 ```
 
+Fetch submodules and run the `eproto` Docker image to generate code:
+
 ```console
 git submodule update --init --recursive
+cd libs/eproto
 docker run --rm -v $(pwd):/workspace -w /workspace ghcr.io/enda-automation/eproto:latest
 ```
 
-## Install buf
+If everything is set up correctly, you should see generated code in `gen` folder.
+
+As a final escape hatch, you can pass additional arguments to `buf generate` command. For example, to regenerate only Go code:
 
 ```console
-go install github.com/bufbuild/buf/cmd/buf@v1.57.2
+docker run --rm -v $(pwd):/workspace -w /workspace ghcr.io/enda-automation/eproto:latest buf generate --template "{plugins: [{local: 'protoc-gen-go', out: 'gen/go/pkg/egate-proto', opt: ['paths=import', 'module=enda/pkg/egate-proto'], include_imports: true}]}"
 ```
 
-## Required tools in PATH
+## Development
 
-### protoc-gen-go
+`buf` tool is used to generate code.
 
-```console
-go install google.golang.org/protobuf/cmd/protoc-gen-go@v1.36.10
-```
+`buf.gen.yaml` controls generation. Local tools are preferred with respect to remote plugins because you can hit rate limits for remote plugins.
 
-### protoc-gen-nanopb
-
-```console
-brew install nanopb
-```
-
-Developed with 0.4.9.1
-
-### protoc-gen-ts_proto
-
-```console
-npm install -g ts-proto
-export PATH="$PATH:$(npm bin -g)"
-```
-
-```console
-protoc --version
-libprotoc 32.1
-```console
+To install `buf` tool, follow instructions at https://buf.build/docs/cli/installation/.
