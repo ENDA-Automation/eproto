@@ -29,8 +29,6 @@ RUN bash -c "source $NVM_DIR/nvm.sh && nvm install $NODE_VERSION && npm i -g ts-
 RUN apt-get install -y nanopb
 RUN apt-get install -y python3-protobuf
 
-COPY gen.sh /workspace/gen.sh
-
 WORKDIR /workspace
 
 ENTRYPOINT [ "./gen.sh" ]
