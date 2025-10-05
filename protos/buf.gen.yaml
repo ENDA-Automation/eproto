@@ -5,10 +5,10 @@ inputs:
     include_package_files: false
 plugins:
   - local: protoc-gen-go
-    out: ../gen/go/pkg/egate-proto
+    out: ../gen/go
     opt: 
       - paths=import
-      - module=enda/pkg/egate-proto
+      - module=enda/pkg/eproto
     include_imports: true
 
   - local: protoc-gen-nanopb

@@ -3,7 +3,7 @@ syntax = "proto3";
 
 import "egate_messages.proto";
 
-option go_package = "enda/pkg/egate-proto";
+option go_package = "enda/pkg/eproto";
 
 message PairReadyRequest {
   uint32 challenge_code = 1;

@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package egate;
 
-option go_package = "enda/pkg/egate-proto/egate";
+option go_package = "enda/pkg/eproto/egate";
 
 message PairReadyRequest {
   bytes pair_token = 1;
