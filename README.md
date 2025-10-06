@@ -21,7 +21,7 @@ git commit -m "chore: add eproto submodule"
 
 ### Generate code
 
-Fetch submodules and run the `eproto` Docker image to generate code:
+Run the `eproto` Docker image to generate code:
 
 ```console
 docker run --rm -v $(pwd)/external/eproto:/workspace ghcr.io/enda-automation/eproto:latest
@@ -31,11 +31,11 @@ If everything is set up correctly, you should see generated code in `external/ep
 
 ### Use generated code
 
-Do not make modifications to this folder as it will be cleared on next generation.
+Do not make modifications to this `external/eproto/gen` folder as it will be cleared on next generation.
 
-If necessary write a script to move the files wherever you need them in your project.
+If necessary write a script to copy the files wherever you need them in your project.
 
-### Example scripts to copy files to your project:
+### Example scripts to copy files to your project
 
 Example scripts to copy Go files to your project:
 
