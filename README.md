@@ -47,7 +47,7 @@ set -e
 # Pull latest changes for eproto submodule
 git submodule update --remote external/eproto
 # Regenerate code
-docker run --rm -v $(pwd)/external/eproto:/workspace ghcr.io/enda-automation/eproto:latest
+docker run --pull always --rm -v $(pwd)/external/eproto:/workspace ghcr.io/enda-automation/eproto:latest
 # Copy generated files to your project
 mkdir -p pkg/eproto
 cp -fr external/eproto/gen/go/* pkg/eproto/
@@ -63,7 +63,7 @@ cp -fr external/eproto/gen/go/* pkg/eproto/
       - pkg/eproto/*
     cmds:
       - git submodule update --remote external/eproto
-      - docker run --rm -v $(pwd)/external/eproto:/workspace ghcr.io/enda-automation/eproto:latest
+      - docker run --pull always --rm -v $(pwd)/external/eproto:/workspace ghcr.io/enda-automation/eproto:latest
       - mkdir -p go/pkg/eproto
       - cp -fr external/eproto/gen/go/* go/pkg/eproto/
 ```
@@ -71,21 +71,16 @@ cp -fr external/eproto/gen/go/* pkg/eproto/
 As a final escape hatch, you can pass additional arguments to `buf generate` command. For example, to regenerate only Go code:
 
 ```console
-docker run --rm -v $(pwd):/workspace -w /workspace ghcr.io/enda-automation/eproto:latest buf generate --template "{plugins: [{local: 'protoc-gen-go', out: 'gen/go/pkg/egate-proto', opt: ['paths=import', 'module=enda/pkg/egate-proto'], include_imports: true}]}"
+docker run --rm -v $(pwd)/external/eproto:/workspace -w /workspace ghcr.io/enda-automation/eproto:latest buf generate --template "{plugins: [{local: 'protoc-gen-go', out: 'gen/go/pkg/egate-proto', opt: ['paths=import', 'module=enda/pkg/egate-proto'], include_imports: true}]}"
 ```
+
+>[!WARNING]
+> `docker run` runs locally cached version if '--pull always' is not specified. Use it to ensure you are using the latest image, the ":latest" kinda implies that but Docker does not work that way.
 
 ## Update
 
 ```console
 git submodule update --remote external/eproto
-git add external/eproto
-git commit -m "Update eproto submodule"
-```
-
-```console
-cd external/eproto
-git pull origin main  # or whatever the default branch is
-cd ../..
 git add external/eproto
 git commit -m "Update eproto submodule"
 ```
