@@ -16,6 +16,7 @@ ENV PATH="/usr/local/go/bin:${PATH}"
 ENV PATH="/root/go/bin:${PATH}"
 
 RUN wget https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh && bash install.sh
+
 # set env
 ENV NVM_DIR=/root/.nvm
 
@@ -24,12 +25,19 @@ ENV NODE_VERSION=22
 RUN wget https://github.com/nanopb/nanopb/releases/download/nanopb-0.4.9.1/nanopb-0.4.9.1-linux-x86.tar.gz && \
     tar -xvzf nanopb-0.4.9.1-linux-x86.tar.gz -C /usr/local && \
     rm nanopb-0.4.9.1-linux-x86.tar.gz
+
+RUN bash -c "source $NVM_DIR/nvm.sh && nvm install $NODE_VERSION && npm i -g ts-proto@2.7.7"
+
+RUN apt install -y python3 python3-pip && \
+    pip3 install protobuf grpcio-tools && \
+    apt remove -y python3-pip git wget && \
+    apt autoremove -y
+
 # install node
-RUN bash -c "source $NVM_DIR/nvm.sh && nvm install $NODE_VERSION && npm i -g ts-proto"
-RUN apt-get install -y nanopb
-RUN apt-get install -y python3-protobuf
+
+ENV PATH="/usr/local/nanopb-0.4.9.1-linux-x86/generator/:${PATH}"
 
 WORKDIR /workspace
 
-ENTRYPOINT [ "./gen.sh" ]
+ENTRYPOINT [ "/workspace/gen.sh" ]
 CMD []
