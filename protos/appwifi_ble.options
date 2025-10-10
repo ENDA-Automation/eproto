@@ -1,0 +1,20 @@
+WifiCredentials.ssid        max_length:32
+WifiCredentials.password    max_length:32
+DeviceName.name             max_length:64
+
+
+WifiNetwork.ssid            max_length:32
+WifiNetwork.bssid           max_size:6
+
+WifiScanResult.networks     max_count:10
+
+ManualIPConfig.ip           max_length:16
+ManualIPConfig.netmask      max_length:16
+ManualIPConfig.gateway      max_length:16
+
+FirmwareUpdate.model max_length: 32
+FirmwareUpdate.chunk_data max_size:512
+
+DeviceStatus.ip             max_length:16
+DeviceStatus.mac            max_length:18
+

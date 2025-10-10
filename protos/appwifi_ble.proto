@@ -1,0 +1,111 @@
+syntax = "proto3";
+
+option go_package = "enda/pkg/eproto/appwifi_ble";
+
+message DeviceName {
+  string name = 1;
+}
+
+message WifiNetwork {
+  string ssid = 1; 
+  int32 rssi = 2;
+  uint32 security_type = 3;
+  bytes bssid = 4;
+}
+
+message WifiScanResult {
+  repeated WifiNetwork networks = 1;
+}
+
+message ManualIPConfig {
+  string ip = 1;
+  string netmask = 2;
+  string gateway = 3;
+}
+
+message WifiCredentials {
+  string ssid = 1;
+  string password = 2; // WiFi password (leave empty for open networks)
+  uint32 security_type = 3;
+  oneof ipconfig {
+    bool dhcp = 4;
+    ManualIPConfig manual = 5;
+  }
+}
+
+message ChallengeCode {
+  uint32 code = 1;
+}
+
+message ACK {
+}
+
+message FirmwareUpdate {
+  optional string model = 1; // send with first chunk
+  uint32 total_chunk = 2;
+  uint32 current_chunk = 3;
+  bytes chunk_data = 4;
+}
+
+/* for the request, leave the properties empty */
+message FirmwareVersion {
+  uint32 major = 1;
+  uint32 minor = 2;
+  uint32 revision = 3;
+  uint32 build_num = 4;
+}
+
+/* if this message is received, we approve the image and permanently keep it */
+message FirmwareMarkOK {
+}
+
+message FirmwareReboot {
+}
+
+message DeviceStatus {
+  enum Status {
+    STATUS_OFFLINE_UNSPECIFIED = 0;
+    STATUS_WIFI_CONNECTED = 1;
+    STATUS_ONLINE = 2;
+    STATUS_MQTT_CONNECTED = 3;
+  }
+  Status status = 1;
+  WifiNetwork wifi_network = 2;
+  FirmwareVersion firmware_version = 3;
+  DeviceName device_name = 4;
+  string ip = 5;
+  string mac = 6;
+}
+
+message SetPassword {
+  uint32 password = 1;
+}
+
+message WifiUnifiedRequest {
+  uint32 password = 1;
+  uint32 message_id = 2;
+  oneof request_type {
+    DeviceName device_name = 3;
+    bool request_scan = 4;             
+    WifiCredentials connect_request = 5; 
+    ChallengeCode challenge_code = 6;        
+    FirmwareUpdate firmware_update = 7;
+    FirmwareVersion firmware_version = 8;
+    FirmwareMarkOK firmware_mark_ok = 9;
+    FirmwareReboot firmware_reboot = 10;
+    DeviceStatus device_status = 11;
+    SetPassword set_password = 12;
+  }
+}
+
+message WifiUnifiedResponse {
+  uint32 message_id = 1;
+  int32 error_code = 2;
+  oneof response_type {
+    ACK ack = 3;
+    WifiScanResult scan_result = 4;         
+    ChallengeCode challenge_code = 5;      
+    FirmwareVersion firmware_version = 6;    
+    DeviceStatus device_status = 7;
+  }
+}

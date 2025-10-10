@@ -104,8 +104,7 @@ message Request {
     TrackRequest track_page_read = 10;
     IntervalRequest interval = 11;
     PageWriteRequest page_write = 12;
-    ReadMultipleParam read_multiple = 13;
-    WriteMultipleParam write_multiple = 14;
+    BrokerInfo broker_info = 13;
 
     egate.UsbScanRequest usb_scan = 21;
     egate.UsbBindRequest usb_bind = 22;
@@ -117,18 +116,8 @@ message Request {
   }
 }
 
-message ReadMultipleParam {
-  uint32 slave_id = 1;
-  uint32 startAddress = 2;
-  uint32 length = 3;
-  RegisterType register_type = 4;
-}
-
-message WriteMultipleParam {
-  uint32 slave_id = 1;
-  uint32 startAddress = 2;
-  RegisterType register_type = 3;
-  repeated int32 data = 4;
+message BrokerInfo {
+  string uri = 1;
 }
 
 message EmptyResponse {}
@@ -156,7 +145,7 @@ message Response {
     EmptyResponse empty = 3;
     ReadResponse read = 4;
     TrackedSlavesData track_read = 5;
-    MultipleReadResponse read_multiple = 6;
+    TrackedSlavesData track_page_response = 6;
 
     egate.UsbScanResponse usb_scan = 20;
     egate.UsbBindResponse usb_bind = 21;

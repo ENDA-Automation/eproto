@@ -3,6 +3,10 @@ clean: true
 inputs:
   - proto_file: messages.proto
     include_package_files: false
+  - proto_file: appwifi_ble.proto
+    include_package_files: false
+  - proto_file: egate_messages.proto
+    include_package_files: false
 plugins:
   - local: protoc-gen-go
     out: ../gen/go
