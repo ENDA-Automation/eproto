@@ -6,7 +6,7 @@ Request.token             max_size:32     fixed_length:true
 TrackRequest.slaves                 max_count:10
 TrackRequest.SlaveTrackPage.model   max_length:32
 TrackRequest.SlaveTrackPage.label   max_length:32
-TrackRequest.SlaveTrackPage.ranges  max_count:10
+TrackRequest.SlaveTrackPage.ranges  max_count:15
 
 AutoDiscoverySlave.model   max_length:32
 
@@ -17,7 +17,7 @@ CommandRequest.slave max_count:10
 TrackedSlavesData.DataStream.data max_count:250
 
 PageWriteRequest.slave_id            max_count:10
-PageWriteRequest.ranges              max_count:10
+PageWriteRequest.ranges              max_count:15
 SlaveRange.data                      max_count:127
 
 Log.message max_length:512
