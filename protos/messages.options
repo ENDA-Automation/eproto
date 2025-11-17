@@ -6,7 +6,7 @@ Request.token             max_size:32     fixed_length:true
 TrackRequest.slaves                 max_count:10
 TrackRequest.SlaveTrackPage.model   max_length:32
 TrackRequest.SlaveTrackPage.label   max_length:32
-TrackRequest.SlaveTrackPage.ranges  max_count:15
+TrackRequest.SlaveTrackPage.ranges  max_count:50
 
 AutoDiscoverySlave.model   max_length:32
 
